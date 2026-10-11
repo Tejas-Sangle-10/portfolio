@@ -1,0 +1,786 @@
+/* ========== 1. DESIGN TOKENS ========== */
+:root {
+  --bg: #0a0a0a;
+  --surface: #161616;
+  --text: #f2f2f2;
+  --muted: #9a9a9a;
+  --accent: #b3202f;                        /* deep crimson */
+  --accent-light: #ff5c6a;   /* brighter red, for text only */
+  --accent-glow: rgba(179, 32, 47, 0.35);
+
+  --font-display: "Press Start 2P", monospace;
+  --font-body: "Rajdhani", sans-serif;
+}
+
+/* ========== 2. RESET + BASE ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;   /* leaves room for the sticky navbar */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+/* ========== 3. BUTTON (reused later) ========== */
+.btn {
+  display: inline-block;
+  font-weight: 700;
+  border: 2px solid var(--accent);
+  color: var(--accent-light);
+  padding: 0.6rem 1.4rem;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease,
+              box-shadow 0.2s ease, transform 0.2s ease;   /* transform added */
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 18px var(--accent-glow);
+  transform: translateY(-3px);                              /* lifts up */
+}
+
+/* ========== 4. NAVBAR ========== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 10, 0.95);
+  border-bottom: 2px solid var(--accent);
+}
+
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;   /* logo | links | empty */
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.4rem 2rem;
+}
+
+/* Logo */
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.cursor {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes wobble {
+  20% { rotate: -6deg; }
+  40% { rotate: 5deg; }
+  60% { rotate: -3deg; }
+  80% { rotate: 2deg; }
+}
+
+/* Hamburger parts: hidden on desktop */
+.menu-toggle,
+.hamburger {
+  display: none;
+}
+
+/* Links */
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 1.3rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  overflow: hidden;
+  z-index: 0;
+  transition: color 0.3s ease, scale 0.3s ease;
+}
+
+/* The fill layer */
+.nav-links a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: var(--text);
+  scale: 1.08;
+  animation: wobble 0.4s ease;
+}
+
+.nav-links a:hover::before,
+.nav-links a:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.nav-links a:active {
+  scale: 0.92;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links a:hover,
+  .nav-links a:focus-visible,
+  .nav-links a:focus:not(:focus-visible) {
+    animation: none;
+  }
+}
+
+/* ========== 5. HERO ========== */
+#hero {
+  display: flex;
+  flex-direction: column;       /* stack the items vertically */
+  align-items: center;          /* center horizontally */
+  justify-content: center;      /* center vertically */
+  gap: 1.5rem;
+  text-align: center;
+  min-height: calc(100vh - 80px);   /* full screen minus the navbar */
+  padding: 2rem 1.5rem;
+
+  background:
+    linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.9)),
+    url("images/hero-bg.jpg") center / cover no-repeat;
+}
+
+.hero-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  color: var(--accent-light);
+  text-shadow: 0 0 10px var(--accent-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.4; }
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 3.5rem);   /* scales with screen width */
+  line-height: 1.3;
+  text-shadow: 0 0 25px var(--accent-glow);
+}
+
+.hero-role {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hero-intro {
+  max-width: 50ch;              /* keeps lines a readable length */
+  color: var(--muted);
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;              /* buttons stack on tiny screens */
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-solid {
+  background: var(--accent);
+  color: var(--text);
+}
+
+/* ========== 6. ABOUT ========== */
+#about {
+  min-height: auto;            /* overrides the temporary 100vh rule */
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* Small bar under every section title */
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--accent);
+  margin: 1rem auto 0;
+}
+
+.about-card {
+  display: grid;
+  grid-template-columns: 1fr 2fr;   /* avatar takes 1 part, text takes 2 */
+  gap: 2.5rem;
+  align-items: center;
+  padding: 2.5rem;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.about-card:hover {
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.avatar {
+  width: 100%;
+  max-width: 260px;
+  justify-self: center;
+  aspect-ratio: 1;
+  background: var(--accent);          /* the red that shows through */
+  border: 3px solid var(--accent);
+  border-radius: 8px;
+  overflow: hidden;                   /* clips the image to the rounded corners */
+  isolation: isolate;                 /* keeps the blend effect inside this box */
+}
+
+.avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: invert(1);                  /* white background -> black, black bat -> white */
+  mix-blend-mode: multiply;           /* white becomes red, black stays black */
+}
+
+.about-text p {
+  max-width: 55ch;
+  margin-bottom: 1rem;
+  color: var(--muted);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.stats li {
+  padding: 0.4rem 0.9rem;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.stats span {
+  margin-right: 0.5rem;
+  color: var(--muted);
+}
+
+/* ========== 7. JOURNEY ========== */
+#education {
+  min-height: auto;            /* overrides the temporary 100vh rule */
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+}
+
+.timeline {
+  border-left: 3px solid var(--accent);   /* the vertical line */
+  padding-left: 2rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.timeline-item:hover {
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* The dot sitting on the line */
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-2rem - 10px);               /* moves it onto the line */
+  top: 1.8rem;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.timeline-item h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-sub {
+  color: var(--accent-light);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.timeline-item p:last-child {
+  color: var(--muted);
+}
+
+/* ========== 8. SKILLS (INVENTORY) ========== */
+#skills {
+  min-height: auto;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+}
+
+.slot-group {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 2rem 0 1rem;
+}
+
+.inventory {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));  /* as many columns as fit */
+  gap: 1rem;
+}
+
+.slot {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: var(--surface);
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: default;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slot-icon {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--accent-light);
+  text-shadow: 0 0 12px var(--accent-glow);
+}
+
+.slot-name {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* The description panel that flips in on hover */
+.slot-desc {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  background: var(--accent);
+  opacity: 0;
+  transform: translateY(100%);       /* parked below the slot */
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.slot:hover,
+.slot:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 18px var(--accent-glow);
+  outline: none;
+}
+
+.slot:hover .slot-desc,
+.slot:focus-visible .slot-desc {
+  opacity: 1;
+  transform: translateY(0);          /* slides up over the slot */
+}
+
+/* Locked slots */
+.slot.locked {
+  border-style: dashed;
+  border-color: #3a3a3a;
+}
+
+.slot.locked .slot-icon,
+.slot.locked .slot-name {
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.slot.locked .slot-desc {
+  background: #2a2a2a;
+  color: var(--muted);
+}
+
+/* ========== 9. CONTACT ========== */
+#contact {
+  min-height: auto;                       /* overrides the temporary 100vh rule */
+  padding: 5rem 1.5rem;
+  background: #141414;                    /* a shade lighter than the page */
+  border-top: 4px solid var(--accent);    /* the clear border where Contact starts */
+}
+
+.contact-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contact-text {
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));  /* 3 across on desktop, stacks on mobile */
+  gap: 1.25rem;
+}
+
+/* Black and white cards */
+.contact-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.4rem;
+  background: #fff;
+  color: #000;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  text-align: left;
+  transition: background 0.2s ease, color 0.2s ease,
+              transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-card svg {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;                          /* icon never gets squashed */
+}
+
+.contact-label {
+  min-width: 0;                            /* lets long text wrap inside the card */
+}
+
+.contact-label strong {
+  display: block;
+  font-size: 1.2rem;
+}
+
+.contact-label small {
+  display: block;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;                 /* long email wraps instead of overflowing */
+}
+
+/* Hover: colors swap and the card lifts */
+.contact-card:hover,
+.contact-card:focus-visible {
+  background: #000;
+  color: #fff;
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* ========== 10. FOOTER ========== */
+.site-footer {
+  background: var(--bg);
+  color: var(--muted);
+}
+
+.back-to-top {
+  display: block;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text);
+  background: #222;
+  transition: background 0.2s ease;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  background: var(--accent);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;      /* wide intro, two narrow link columns */
+  gap: 2.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem;
+}
+
+.footer-col h3 {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.footer-col p {
+  max-width: 40ch;
+}
+
+.footer-col li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-col a {
+  transition: color 0.2s ease;
+}
+
+.footer-col a:hover,
+.footer-col a:focus-visible {
+  color: var(--accent-light);
+}
+
+.footer-bottom {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #2a2a2a;           /* thin divider above the copyright line */
+  text-align: center;
+}
+
+/* ========== 10. FOOTER ========== */
+.site-footer {
+  padding: 1.5rem 2rem;
+  background: var(--bg);
+  border-top: 1px solid #2a2a2a;     /* thin divider above the footer */
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ========== 11. PROJECTS ========== */
+#projects {
+  min-height: auto;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  overflow: hidden;                      /* clips the image to the rounded corners */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.project-img {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-bottom: 2px solid var(--accent);
+}
+
+.project-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;                  /* shows the top of the screenshot */
+  transition: transform 0.4s ease;
+}
+
+.project-card:hover .project-img img {
+  transform: scale(1.06);                /* slow zoom on hover */
+}
+
+.project-body {
+  flex: 1;                               /* body fills the card so buttons line up at the bottom */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.project-tag {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--accent-light);
+}
+
+.project-body h3 {
+  font-size: 1.6rem;
+}
+
+.project-body > p:not(.project-tag) {
+  color: var(--muted);
+}
+
+.tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech li {
+  padding: 0.2rem 0.7rem;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.project-links {
+  margin-top: auto;                      /* pushes the buttons to the bottom of the card */
+  padding-top: 0.5rem;
+}
+
+/* ========== TEMPORARY: delete once real content exists ========== */
+section {
+  min-height: 100vh;
+  padding: 6rem 1.5rem 2rem;
+}
+
+/* ========== RESPONSIVE (keep this at the very bottom) ========== */
+@media (max-width: 768px) {
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding: 1rem 1.5rem;
+  }
+
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    width: 26px;
+    height: 3px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .menu-toggle:focus-visible + .hamburger {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  .menu-toggle:checked + .hamburger span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .menu-toggle:checked + .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle:checked + .hamburger span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg);
+    border-bottom: 2px solid var(--accent);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  }
+
+  .menu-toggle:checked ~ .nav-links {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-links a {
+    display: block;
+    text-align: center;
+  }
+    .about-card {
+    grid-template-columns: 1fr;     /* stack avatar above text */
+    padding: 1.5rem;
+  }
+
+  .avatar {
+    max-width: 180px;   
+    margin: 0 auto;
+  }
+
+    .footer-grid {
+    grid-template-columns: 1fr;            /* stack the columns on mobile */
+    gap: 2rem;
+    padding: 2.5rem 1.5rem;
+  }
+}
