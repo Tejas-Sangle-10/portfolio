@@ -35,15 +35,14 @@ a skill tree with unlocked and locked skills, and projects presented as quests.
 A plain HTML page for a student with navigation links, a profile table,
 a skills list and a weekly schedule table.
 
-Link: https://github.com/Tejas-Sangle-10/student-portal
+Link: https://github.com/Tejas-Sangle-10/Assingments/blob/master/student-portal.html
 
 ### Project 2: Flexbox Quest
 
 A game-style screen with a top bar, play area, controls, inventory and quest list,
 all laid out using Flexbox.
 
-Link: https://github.com/Tejas-Sangle-10/flexbox-quest
-
+Link: https://github.com/Tejas-Sangle-10/Assingments/tree/master/flexbox-quest
 ### Project 3: This Portfolio
 
 The website you're looking at, built with Grid, Flexbox, positioning and animations.
