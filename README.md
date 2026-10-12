@@ -2,6 +2,7 @@
 
 A gamer-themed personal portfolio website built using only HTML and CSS (no JavaScript).
 
+**Live site:** https://tejas-sangle-10.github.io/portfolio/
 **Repository:** https://github.com/Tejas-Sangle-10/portfolio
 
 ## About
